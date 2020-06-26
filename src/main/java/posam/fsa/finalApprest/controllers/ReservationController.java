@@ -14,6 +14,7 @@ import java.util.Optional;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
+@RequestMapping("/api")
 public class ReservationController {
     private final ReservationRepository reservationRepository;
 
@@ -27,7 +28,12 @@ public class ReservationController {
         return reservationRepository.findAll();
     }
 
-    @PostMapping(path="/merchants")
+    @GetMapping(path = "/reservations/{id}")
+    public Optional<Reservation> getReservationById(@PathVariable(value = "id") Long id){
+        return reservationRepository.findById(id);
+    }
+
+    @PostMapping(path="/reservations")
     public Reservation createReservation(@Valid @RequestBody Reservation reservation) {
         System.out.print("This is reservation" + reservation);
         Optional<Reservation> optionalReservation = reservationRepository.findById(reservation.getId());
