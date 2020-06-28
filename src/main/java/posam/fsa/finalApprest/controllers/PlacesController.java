@@ -23,7 +23,7 @@ public final class PlacesController {
         this.placesRepository = placesRepository;
     }
 
-    @GetMapping(path = "/places", produces = "applocation/json")
+    @GetMapping(path = "/places", produces = "application/json")
     public List<Places> getAllPlaces(){
         return placesRepository.findAll();
     }
