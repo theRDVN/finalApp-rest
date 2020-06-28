@@ -1,29 +1,25 @@
 package posam.fsa.finalApprest.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import posam.fsa.finalApprest.exeption.ReservationExistsException;
 import posam.fsa.finalApprest.exeption.ResourceNotFoundException;
 import posam.fsa.finalApprest.models.Reservation;
 import posam.fsa.finalApprest.repository.ReservationRepository;
 
-import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
-@CrossOrigin(origins = "http://localhost:8080", maxAge = 3600)
+@CrossOrigin(origins = "http://localhost:8080")
 @RestController
 @RequestMapping("/api")
 public class ReservationController {
-    private final ReservationRepository reservationRepository;
 
     @Autowired
-    public ReservationController(final ReservationRepository reservationRepository){
-        this.reservationRepository = reservationRepository;
-    }
+    ReservationRepository reservationRepository;
 
-    @GetMapping(path= "/reservations", produces = "application/jason")
+    @GetMapping(path= "/reservations")
     public List<Reservation> getAllReservations(){
         return reservationRepository.findAll();
     }
@@ -33,12 +29,23 @@ public class ReservationController {
         return reservationRepository.findById(id);
     }
 
-    @PostMapping(path="/reservations")
-    public Reservation createReservation(@Valid @RequestBody Reservation reservation) {
+    /*@PostMapping(path="/reservations")
+    public Reservation createReservation(@RequestBody Reservation reservation) {
         System.out.print("This is reservation" + reservation);
         Optional<Reservation> optionalReservation = reservationRepository.findById(reservation.getId());
         optionalReservation.ifPresent(returnedMerchant -> {throw new ReservationExistsException();});
         return reservationRepository.save(reservation);
+    }*/
+
+    @PostMapping("/reservations")
+    public ResponseEntity<Reservation> createReservation(@RequestBody Reservation reservation){
+        try {
+            Reservation _reservation = reservationRepository
+                    .save(new Reservation(reservation.getUserId(), reservation.getPlacesId(), reservation.getTimeFrom(), reservation.getTimeTo(), reservation.getAmount()));
+            return new ResponseEntity<>(_reservation, HttpStatus.CREATED);
+        }catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.EXPECTATION_FAILED);
+        }
     }
 
    /* @GetMapping(path="/reservations/{user_id}")

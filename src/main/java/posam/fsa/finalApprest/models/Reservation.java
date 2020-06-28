@@ -1,7 +1,7 @@
 package posam.fsa.finalApprest.models;
 
 import javax.persistence.*;
-import java.sql.Date;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "reservation")
@@ -21,10 +21,10 @@ public class Reservation {
     private Places places_id;
 
     @Column(name = "timeFrom")
-    private Date timeFrom;
+    private LocalDateTime timeFrom;
 
     @Column(name = "timeTo")
-    private Date timeTo;
+    private LocalDateTime timeTo;
 
     @Column(name = "amount")
     private Long amount;
@@ -32,9 +32,9 @@ public class Reservation {
     public Reservation() {
     }
 
-    public Reservation(Long id, User user_id, Date timeFrom, Date timeTo, Long amount){
-        this.id = id;
+    public Reservation(User user_id,Places places_id, LocalDateTime timeFrom, LocalDateTime timeTo, Long amount){
         this.user_id = user_id;
+        this.places_id = places_id;
         this.timeFrom = timeFrom;
         this.timeTo = timeTo;
         this.amount = amount;
@@ -64,19 +64,19 @@ public class Reservation {
       this.places_id = places_id;
     }
 
-    public Date getTimeFrom(){
+    public LocalDateTime getTimeFrom(){
         return timeFrom;
     }
 
-    public void setTimeFrom(Date timeFrom){
+    public void setTimeFrom(LocalDateTime timeFrom){
         this.timeFrom = timeFrom;
     }
 
-    public Date getTimeTo(){
+    public LocalDateTime getTimeTo(){
         return timeTo;
     }
 
-    public void setTimeTo(Date timeTo){
+    public void setTimeTo(LocalDateTime timeTo){
         this.timeTo = timeTo;
     }
 
