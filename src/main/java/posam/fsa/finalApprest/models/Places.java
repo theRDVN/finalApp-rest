@@ -18,6 +18,7 @@ public class Places {
     @Column(name="places_maxAmount")
     private Long maxAmount;
 
+
     @OneToMany(mappedBy = "places_id")
     private Set<Reservation> reservations;
 

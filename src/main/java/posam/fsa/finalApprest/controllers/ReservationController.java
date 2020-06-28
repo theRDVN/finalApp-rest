@@ -8,10 +8,11 @@ import posam.fsa.finalApprest.exeption.ResourceNotFoundException;
 import posam.fsa.finalApprest.models.Reservation;
 import posam.fsa.finalApprest.repository.ReservationRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-@CrossOrigin(origins = "http://localhost:8080")
+@CrossOrigin(origins = "http://localhost:4200")
 @RestController
 @RequestMapping("/api")
 public class ReservationController {
@@ -19,14 +20,43 @@ public class ReservationController {
     @Autowired
     ReservationRepository reservationRepository;
 
-    @GetMapping(path= "/reservations")
+    /*@GetMapping(path= "/reservations")
     public List<Reservation> getAllReservations(){
         return reservationRepository.findAll();
+    }*/
+
+    @GetMapping("/reservations")
+    public ResponseEntity<List<Reservation>> getAllTutorials(@RequestParam(required = false) Long id) {
+        try {
+            List<Reservation> reservations = new ArrayList<Reservation>();
+
+            if (id == null)
+                reservationRepository.findAll().forEach(reservations::add);
+
+            if (reservations.isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+
+            return new ResponseEntity<>(reservations, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
-    @GetMapping(path = "/reservations/{id}")
+    /*@GetMapping(path = "/reservations/{id}")
     public Optional<Reservation> getReservationById(@PathVariable(value = "id") Long id){
         return reservationRepository.findById(id);
+    }*/
+
+    @GetMapping("/reservations/{id}")
+    public ResponseEntity<Reservation> getTutorialById(@PathVariable("id") long id) {
+        Optional<Reservation> tutorialData = reservationRepository.findById(id);
+
+        if (tutorialData.isPresent()) {
+            return new ResponseEntity<>(tutorialData.get(), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     /*@PostMapping(path="/reservations")
@@ -47,16 +77,6 @@ public class ReservationController {
             return new ResponseEntity<>(null, HttpStatus.EXPECTATION_FAILED);
         }
     }
-
-   /* @GetMapping(path="/reservations/{user_id}")
-    public List<Reservation> getAllReservationContainingUser(@PathVariable(value = "user_id") Long user_id){
-        return reservationRepository.findByUser_id(user_id);
-    }
-
-    @GetMapping(path="/reservations/{places_id}")
-    public List<Reservation> getAllReservationContainingPlace(@PathVariable(value = "places_id") Long place_id){
-        return reservationRepository.findByPlaces_id(place_id);
-    }*/
 
     @DeleteMapping("/reservations/{id}")
     public ResponseEntity<?> deleteReservation(@PathVariable(value = "id") Long id) {

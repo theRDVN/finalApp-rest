@@ -10,11 +10,13 @@ public class Reservation {
     @Id
     @GeneratedValue
     @Column(name = "reservation_id",unique = true, nullable = false)
-    private Long id;
+    private Long reservation_id;
+
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", nullable = false)
     private User user_id;
+
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "places_id", nullable = false)
@@ -41,11 +43,11 @@ public class Reservation {
     }
 
     public Long getId(){
-        return id;
+        return reservation_id;
     }
 
-    public void setId(Long id){
-        this.id = id;
+    public void setId(Long reservation_id){
+        this.reservation_id = reservation_id;
     }
 
     public User getUserId(){
@@ -91,7 +93,7 @@ public class Reservation {
     @Override
     public String toString() {
         return "Reservation{" +
-                "id=" + id +
+                "id=" + reservation_id +
                 ", user_id=" + user_id +
                 ", places_id=" + places_id +
                 ", timeFrom=" + timeFrom +
